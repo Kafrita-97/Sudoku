@@ -66,29 +66,24 @@ struct ContentView: View {
                 Text("selected: nothing")
             }
             
-            HStack {
-                Button("Fill") {
-                    fillButton(matriz: &matriz)
-                }
-                .font(.system(size: 20, weight: .semibold))
-                Divider().fixedSize()
-                Button ("Clear") {
-                    clearButton(matriz: &matriz)
-                }
-                .font(.system(size: 20, weight: .semibold))
-            }
-            
             Spacer()
             
             HStack {
-                Text ("tool 1")
+                Text ("Fill")
+                    .onTapGesture {
+                        fillButton(matriz: &matriz)
+                    }
                 Divider().fixedSize().padding()
-                Text ("tool 2")
+                Text ("Clear")
+                    .onTapGesture{
+                        clearButton(matriz: &matriz)
+                    }
                 Divider().fixedSize().padding()
                 Text ("tool 3")
                 Divider().fixedSize().padding()
                 Text ("tool 4")
             }
+            .font(.system(size: 18, weight: .semibold))
             .padding()
             
             HStack {
@@ -96,7 +91,7 @@ struct ContentView: View {
                     Text ("\(number)")
                         .frame(width: 35, height: 50)
                         .border(Color.black)
-                        .font(.system(size: 20, weight: .semibold))
+                        .font(.system(size: 18, weight: .semibold))
                         .onTapGesture {
                             if selectedFlag {
                                 matriz [selectedRow][selectedColumn] = number.self
