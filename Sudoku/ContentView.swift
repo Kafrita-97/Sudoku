@@ -10,10 +10,13 @@ import SwiftUI
 struct ContentView: View {
     
     @State var matriz = [[Int?]] (repeating: [Int?] (repeating: 0, count: 9),count: 9)
+    @State var board = [[Int?]] (repeating: [Int?] (repeating: 0, count: 9), count: 9)
     @State var selectedColumn = 0
     @State var selectedRow = 0
     @State var selectedFlag = false
-    
+    @State var mistakes = 0
+    @State var dificult = 0.1
+
     /*
      la estructura del array es tal que [[], [], [], [],...]
      primero se pintan las vert vstack y segundo dentro las hori hstack
@@ -24,68 +27,28 @@ struct ContentView: View {
     var body: some View {
         VStack {
             
-            HStack {
-                Text("dificult")
-                Divider().fixedSize().padding()
-                Text ("errors")
-                Divider().fixedSize().padding()
-                Text ("score")
-                Divider().fixedSize().padding()
-                Text ("time")
-            }
-            
-            Spacer()
-            
-            VStack (spacing: -1) {
-                ForEach(0..<9) { row in
-                    HStack (spacing: -1) {
-                        ForEach (0..<9) { column in
-                            Text (String(matriz [row][column] ?? 0))
-                                .frame(width: 43, height: 45)
-                                .border (Color .black)
-                                .font(.system(size: 20, weight: .semibold))
-                                .onTapGesture {
-                                    if selectedFlag && selectedColumn == column.self && selectedRow == row.self {
-                                        selectedColumn = 0
-                                        selectedRow = 0
-                                        selectedFlag = false
-                                    } else {
-                                        selectedColumn = column.self
-                                        selectedRow = row.self
-                                        selectedFlag = true
-                                    }
-                                }
-                        }
-                    }
+            Text ("New game")
+                .onTapGesture{
+                    resetParams(matriz: &matriz, board: &board, selectedRow: &selectedRow, selectedColumn: &selectedColumn, selectedFlag: &selectedFlag, mistakes: &mistakes)
+                    newGame(matriz: &matriz, board: &board, dificult: dificult)
                 }
+                .font(.system(size: 30, weight: .semibold))
+            
+            HStack {
+                Divider().fixedSize().padding()
+                Text ("errors: \(mistakes)")
+                Divider().fixedSize().padding()
+                Text("dificult: \(dificult, specifier: "%.1f")")
+                Stepper("", value: $dificult, in: 0.1...0.9, step: 0.1)
             }
             
-            if selectedFlag {
-                Text ("selected: \(selectedRow), \(selectedColumn)")
-            } else {
-                Text("selected: nothing")
-            }
             
             Spacer()
             
-            HStack {
-                Text ("Fill")
-                    .onTapGesture {
-                        fillButton(matriz: &matriz)
-                    }
-                Divider().fixedSize().padding()
-                Text ("Clear")
-                    .onTapGesture{
-                        clearButton(matriz: &matriz)
-                    }
-                Divider().fixedSize().padding()
-                Text ("tool 3")
-                Divider().fixedSize().padding()
-                Text ("tool 4")
-            }
-            .font(.system(size: 18, weight: .semibold))
-            .padding()
+            boardView(board: $board, selectedColumn: $selectedColumn, selectedRow: $selectedRow, selectedFlag: $selectedFlag)
             
+            Spacer()
+
             HStack {
                 ForEach (1..<10) { number in
                     Text ("\(number)")
@@ -93,10 +56,7 @@ struct ContentView: View {
                         .border(Color.black)
                         .font(.system(size: 18, weight: .semibold))
                         .onTapGesture {
-                            if selectedFlag {
-                                matriz [selectedRow][selectedColumn] = number.self
-                                
-                            }
+                            validateInput(matriz: &matriz, board: &board, selectedColumn: selectedColumn, selectedRow: selectedRow, selectedFlag: selectedFlag, input: number.self, mistakes: &mistakes)
                         }
                 }
             }
@@ -105,6 +65,7 @@ struct ContentView: View {
             
         }
         .padding()
+        .preferredColorScheme(.light)
     }
 }
 

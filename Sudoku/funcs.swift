@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  funcs.swift
 //  Sudoku
 //
 //  Created by Juanma on 5/3/24.
@@ -7,29 +7,32 @@
 
 import Foundation
 
-func fillButton(matriz: inout [[Int?]]) -> Bool{
+func newGame(matriz: inout [[Int?]], board: inout [[Int?]], dificult: Double) -> Void {
+    createSolvedSudoku(matriz: &matriz)
+    hideCells(matriz: &matriz, board: &board, dificult: dificult)
+}
 
-//    print(numRamdomOrder)
+func createSolvedSudoku(matriz: inout [[Int?]]) -> Bool{
+    
+    let numRamdomOrder = Array(1...9).shuffled()
+    
     for row in 0..<9 {
         for column in 0..<9 {
+            
             if matriz[row][column] == 0 {
-                var numRamdomOrder: [Int?] = []
-                while numRamdomOrder.count < 9 {
-                    let n = Int.random(in: 1...9)
-                    if !numRamdomOrder.contains(n) {
-                        numRamdomOrder.append(n)
-                    }
-                }
-                for jj in numRamdomOrder {
-                    if validateNum(matriz: &matriz, row: row, column: column, num: jj ?? 0) {
-                        matriz[row][column] = jj
-                        //                        print("row/col: \(row),\(column) --- \(num)")
-                        if fillButton(matriz: &matriz) {
+                
+                for randomNum in numRamdomOrder {
+                    
+                    if validateNum(matriz: &matriz, row: row, column: column, num: randomNum ) {
+                        
+                        matriz[row][column] = randomNum
+                        //                        print("row/col: \(row),\(column) --- \(randomNum)")
+                        if createSolvedSudoku(matriz: &matriz) {
                             return true
                         } else {
+                            
                             matriz[row][column] = 0
                         }
-                        
                     }
                 }
                 return false
@@ -39,11 +42,23 @@ func fillButton(matriz: inout [[Int?]]) -> Bool{
     return true
 }
 
-func clearButton(matriz: inout [[Int?]]) -> Void {
-    for row in 0..<9 {
-        for column in 0..<9 {
-            matriz[row][column] = 0
+func hideCells(matriz: inout [[Int?]], board: inout [[Int?]], dificult: Double) -> Void {
+    let totalCells = 81.0
+    var cellsHidden = 0.0
+    board = matriz
+    
+    while cellsHidden < (totalCells * dificult - 1) {
+        
+        let randomRow = Int.random(in: 0...8)
+        let randomColumn = Int.random(in: 0...8)
+        
+        if board[randomRow][randomColumn] == 0 {
+            continue
+        } else {
+            board[randomRow][randomColumn] = 0
+            cellsHidden += 1
         }
+        //        print("\(totalCells*dificult) /// \(cellsHidden)")
     }
 }
 
@@ -65,6 +80,39 @@ func validateNum(matriz: inout [[Int?]], row: Int, column: Int, num: Int) -> Boo
             }
         }
     }
-    
     return true
+}
+
+func validateInput(matriz: inout [[Int?]], board: inout [[Int?]], selectedColumn: Int, selectedRow: Int, selectedFlag: Bool, input: Int, mistakes: inout Int) -> Void {
+    
+    if selectedFlag {
+        if matriz [selectedRow][selectedColumn] == input {
+            board [selectedRow][selectedColumn] = input
+        } else {
+            mistakes += 1
+        }
+    }
+}
+
+func resetParams(matriz: inout [[Int?]], board: inout [[Int?]],  selectedRow: inout Int, selectedColumn: inout Int, selectedFlag: inout Bool, mistakes: inout Int) -> Void {
+    
+    matriz = [[Int?]] (repeating: [Int?] (repeating: 0, count: 9),count: 9)
+    board = [[Int?]] (repeating: [Int?] (repeating: 0, count: 9), count: 9)
+    selectedColumn = 0
+    selectedRow = 0
+    selectedFlag = false
+    mistakes = 0
+}
+
+
+func anyCellSelected(selectedFlag: inout Bool, selectedColumn: inout Int, selectedRow: inout Int, newSelectedColumn: Int, newSelectedRow: Int) -> Void {
+    if selectedFlag && selectedColumn == newSelectedColumn && selectedRow == newSelectedRow {
+        selectedColumn = 0
+        selectedRow = 0
+        selectedFlag = false
+    } else {
+        selectedColumn = newSelectedColumn
+        selectedRow = newSelectedRow
+        selectedFlag = true
+    }
 }
