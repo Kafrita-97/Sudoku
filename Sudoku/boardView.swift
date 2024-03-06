@@ -15,10 +15,15 @@ struct boardView: View {
     @Binding var selectedFlag: Bool
     
     var body: some View {
+        
         VStack (spacing: -1) {
+            
             ForEach(0..<9) { row in
+                
                 HStack (spacing: -1) {
+                    
                     ForEach (0..<9) { column in
+                        
                         Text (String(board [row][column] ?? 0))
                             .frame(width: 43, height: 45)
                             .border (Color .black)

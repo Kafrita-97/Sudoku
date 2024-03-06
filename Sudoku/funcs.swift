@@ -17,6 +17,7 @@ func createSolvedSudoku(matriz: inout [[Int?]]) -> Bool{
     let numRamdomOrder = Array(1...9).shuffled()
     
     for row in 0..<9 {
+        
         for column in 0..<9 {
             
             if matriz[row][column] == 0 {
@@ -26,7 +27,7 @@ func createSolvedSudoku(matriz: inout [[Int?]]) -> Bool{
                     if validateNum(matriz: &matriz, row: row, column: column, num: randomNum ) {
                         
                         matriz[row][column] = randomNum
-                        //                        print("row/col: \(row),\(column) --- \(randomNum)")
+
                         if createSolvedSudoku(matriz: &matriz) {
                             return true
                         } else {
@@ -43,6 +44,7 @@ func createSolvedSudoku(matriz: inout [[Int?]]) -> Bool{
 }
 
 func hideCells(matriz: inout [[Int?]], board: inout [[Int?]], dificult: Double) -> Void {
+   
     let totalCells = 81.0
     var cellsHidden = 0.0
     board = matriz
@@ -53,16 +55,21 @@ func hideCells(matriz: inout [[Int?]], board: inout [[Int?]], dificult: Double) 
         let randomColumn = Int.random(in: 0...8)
         
         if board[randomRow][randomColumn] == 0 {
+            
             continue
+            
         } else {
+            
             board[randomRow][randomColumn] = 0
             cellsHidden += 1
         }
-        //        print("\(totalCells*dificult) /// \(cellsHidden)")
     }
 }
 
 func validateNum(matriz: inout [[Int?]], row: Int, column: Int, num: Int) -> Bool{
+
+    let startRow = row - row % 3
+    let startCol = column - column % 3
     
     for i in 0..<9 {
         
@@ -71,10 +78,10 @@ func validateNum(matriz: inout [[Int?]], row: Int, column: Int, num: Int) -> Boo
         }
     }
     
-    let startRow = row - row % 3
-    let startCol = column - column % 3
     for i in 0..<3 {
+        
         for j in 0..<3 {
+            
             if matriz[i + startRow][j + startCol] == num {
                 return false
             }
@@ -86,9 +93,13 @@ func validateNum(matriz: inout [[Int?]], row: Int, column: Int, num: Int) -> Boo
 func validateInput(matriz: inout [[Int?]], board: inout [[Int?]], selectedColumn: Int, selectedRow: Int, selectedFlag: Bool, input: Int, mistakes: inout Int) -> Void {
     
     if selectedFlag {
+        
         if matriz [selectedRow][selectedColumn] == input {
+            
             board [selectedRow][selectedColumn] = input
+            
         } else {
+            
             mistakes += 1
         }
     }
@@ -106,11 +117,15 @@ func resetParams(matriz: inout [[Int?]], board: inout [[Int?]],  selectedRow: in
 
 
 func anyCellSelected(selectedFlag: inout Bool, selectedColumn: inout Int, selectedRow: inout Int, newSelectedColumn: Int, newSelectedRow: Int) -> Void {
+    
     if selectedFlag && selectedColumn == newSelectedColumn && selectedRow == newSelectedRow {
+        
         selectedColumn = 0
         selectedRow = 0
         selectedFlag = false
+        
     } else {
+        
         selectedColumn = newSelectedColumn
         selectedRow = newSelectedRow
         selectedFlag = true
