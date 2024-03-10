@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 func newGame(matriz: inout [[Int?]], board: inout [[Int?]], dificult: Double) -> Void {
     createSolvedSudoku(matriz: &matriz)
@@ -105,7 +106,7 @@ func validateInput(matriz: inout [[Int?]], board: inout [[Int?]], selectedColumn
     }
 }
 
-func resetParams(matriz: inout [[Int?]], board: inout [[Int?]],  selectedRow: inout Int, selectedColumn: inout Int, selectedFlag: inout Bool, mistakes: inout Int) -> Void {
+func resetParams(matriz: inout [[Int?]], board: inout [[Int?]],  selectedRow: inout Int, selectedColumn: inout Int, selectedFlag: inout Bool, mistakes: inout Int, defaultCellColor: inout Color) -> Void {
     
     matriz = [[Int?]] (repeating: [Int?] (repeating: 0, count: 9),count: 9)
     board = [[Int?]] (repeating: [Int?] (repeating: 0, count: 9), count: 9)
@@ -113,6 +114,7 @@ func resetParams(matriz: inout [[Int?]], board: inout [[Int?]],  selectedRow: in
     selectedRow = 0
     selectedFlag = false
     mistakes = 0
+    defaultCellColor = .white
 }
 
 
@@ -130,4 +132,32 @@ func anyCellSelected(selectedFlag: inout Bool, selectedColumn: inout Int, select
         selectedRow = newSelectedRow
         selectedFlag = true
     }
+}
+
+func changeSelectedCellsColor(row: Int, column: Int, selectedFlag: Bool, selectedRow: Int, selectedColumn: Int, defaultCellColor: Color) -> Color {
+    
+    if selectedFlag {
+        
+        if row == selectedRow || column == selectedColumn{
+            
+            return .gray
+            
+        } else if defineSelectedBlock(row: row, column: column, selectedRow: selectedRow, selectedColumn: selectedColumn) {
+            
+            return .gray
+            
+        } else {
+            
+            return defaultCellColor
+        }
+    }
+    return defaultCellColor
+}
+
+func defineSelectedBlock(row: Int, column: Int, selectedRow: Int, selectedColumn: Int) -> Bool {
+   
+    let blockStartRow = selectedRow / 3 * 3
+    let blockStartColumn = selectedColumn / 3 * 3
+    
+    return row >= blockStartRow && row < blockStartRow + 3 && column >= blockStartColumn && column < blockStartColumn + 3
 }

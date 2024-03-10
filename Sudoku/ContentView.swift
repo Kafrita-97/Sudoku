@@ -16,13 +16,14 @@ struct ContentView: View {
     @State var selectedFlag = false
     @State var mistakes = 0
     @State var dificult = 0.5
+    @State var defaultCellColor = Color.white
     
     var body: some View {
         VStack {
             
             Text ("New game")
                 .onTapGesture{
-                    resetParams(matriz: &matriz, board: &board, selectedRow: &selectedRow, selectedColumn: &selectedColumn, selectedFlag: &selectedFlag, mistakes: &mistakes)
+                    resetParams(matriz: &matriz, board: &board, selectedRow: &selectedRow, selectedColumn: &selectedColumn, selectedFlag: &selectedFlag, mistakes: &mistakes, defaultCellColor: &defaultCellColor)
                     newGame(matriz: &matriz, board: &board, dificult: dificult)
                 }
                 .font(.system(size: 30, weight: .semibold))
@@ -38,10 +39,9 @@ struct ContentView: View {
                 Stepper("", value: $dificult, in: 0.1...0.9, step: 0.1)
             }
             
-            
             Spacer()
             
-            boardView(board: $board, selectedColumn: $selectedColumn, selectedRow: $selectedRow, selectedFlag: $selectedFlag)
+            boardView(board: $board, selectedColumn: $selectedColumn, selectedRow: $selectedRow, selectedFlag: $selectedFlag, defaultCellColor: $defaultCellColor)
             
             Spacer()
 
@@ -50,9 +50,9 @@ struct ContentView: View {
                 ForEach (1..<10) { number in
                     
                     Text ("\(number)")
-                        .frame(width: 35, height: 50)
+                        .frame(width: 35, height: 55)
                         .border(Color.black)
-                        .font(.system(size: 18, weight: .semibold))
+                        .font(.system(size: 30, weight: .semibold))
                         .onTapGesture {
                             validateInput(matriz: &matriz, board: &board, selectedColumn: selectedColumn, selectedRow: selectedRow, selectedFlag: selectedFlag, input: number.self, mistakes: &mistakes)
                         }
@@ -70,3 +70,4 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
+
