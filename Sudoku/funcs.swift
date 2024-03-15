@@ -91,9 +91,9 @@ func validateNum(matriz: inout [[Int?]], row: Int, column: Int, num: Int) -> Boo
     return true
 }
 
-func validateInput(matriz: inout [[Int?]], board: inout [[Int?]], selectedColumn: Int, selectedRow: Int, selectedFlag: Bool, input: Int, mistakes: inout Int) -> Void {
+func validateInput(matriz: inout [[Int?]], board: inout [[Int?]], selectedColumn: Int, selectedRow: Int, selectedFlag: Bool, input: Int, mistakes: inout Int, maxMistakes: inout Bool) -> Void {
     
-    if selectedFlag {
+    if selectedFlag && mistakes < 3 {
         
         if matriz [selectedRow][selectedColumn] == input {
             
@@ -102,9 +102,17 @@ func validateInput(matriz: inout [[Int?]], board: inout [[Int?]], selectedColumn
         } else {
             
             mistakes += 1
+
+            if mistakes == 3 {
+                
+                maxMistakes = true
+                
+            }
         }
     }
 }
+
+
 
 func resetParams(matriz: inout [[Int?]], board: inout [[Int?]],  selectedRow: inout Int, selectedColumn: inout Int, selectedFlag: inout Bool, mistakes: inout Int, defaultCellColor: inout Color) -> Void {
     

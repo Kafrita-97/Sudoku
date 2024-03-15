@@ -17,6 +17,7 @@ struct ContentView: View {
     @State var mistakes = 0
     @State var dificult = 0.5
     @State var defaultCellColor = Color.white
+    @State var maxMistakes = false
     
     var body: some View {
         VStack {
@@ -30,7 +31,7 @@ struct ContentView: View {
             
             HStack {
                 
-                Text ("errors: \(mistakes)")
+                Text ("errors: \(mistakes) / 3")
                 
                 Divider().fixedSize().padding()
                 
@@ -54,8 +55,11 @@ struct ContentView: View {
                         .border(Color.black)
                         .font(.system(size: 30, weight: .semibold))
                         .onTapGesture {
-                            validateInput(matriz: &matriz, board: &board, selectedColumn: selectedColumn, selectedRow: selectedRow, selectedFlag: selectedFlag, input: number.self, mistakes: &mistakes)
+                            validateInput(matriz: &matriz, board: &board, selectedColumn: selectedColumn, selectedRow: selectedRow, selectedFlag: selectedFlag, input: number.self, mistakes: &mistakes, maxMistakes: &maxMistakes)
                         }
+                        .alert(isPresented: $maxMistakes, content: {
+                            Alert(title: Text("Has perdido"))
+                        })
                 }
             }
             
