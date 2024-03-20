@@ -91,7 +91,7 @@ func validateNum(matriz: inout [[Int?]], row: Int, column: Int, num: Int) -> Boo
     return true
 }
 
-func validateInput(matriz: inout [[Int?]], board: inout [[Int?]], selectedColumn: Int, selectedRow: Int, selectedFlag: Bool, input: Int, mistakes: inout Int, maxMistakes: inout Bool) -> Void {
+func validateInput(matriz: inout [[Int?]], board: inout [[Int?]], selectedColumn: Int, selectedRow: Int, selectedFlag: Bool, input: Int, mistakes: inout Int, maxMistakes: inout Bool, gameSolved: inout Bool) -> Void {
     
     if selectedFlag && mistakes < 3 {
         
@@ -110,11 +110,13 @@ func validateInput(matriz: inout [[Int?]], board: inout [[Int?]], selectedColumn
             }
         }
     }
+    
+    isSolved(matriz: matriz, board: board, gameSolved: &gameSolved)
 }
 
 
 
-func resetParams(matriz: inout [[Int?]], board: inout [[Int?]],  selectedRow: inout Int, selectedColumn: inout Int, selectedFlag: inout Bool, mistakes: inout Int, defaultCellColor: inout Color) -> Void {
+func resetParams(matriz: inout [[Int?]], board: inout [[Int?]],  selectedRow: inout Int, selectedColumn: inout Int, selectedFlag: inout Bool, mistakes: inout Int, defaultCellColor: inout Color, gameSolved: inout Bool) -> Void {
     
     matriz = [[Int?]] (repeating: [Int?] (repeating: 0, count: 9),count: 9)
     board = [[Int?]] (repeating: [Int?] (repeating: 0, count: 9), count: 9)
@@ -123,6 +125,8 @@ func resetParams(matriz: inout [[Int?]], board: inout [[Int?]],  selectedRow: in
     selectedFlag = false
     mistakes = 0
     defaultCellColor = .white
+    gameSolved = false
+    
 }
 
 
@@ -168,4 +172,12 @@ func defineSelectedBlock(row: Int, column: Int, selectedRow: Int, selectedColumn
     let blockStartColumn = selectedColumn / 3 * 3
     
     return row >= blockStartRow && row < blockStartRow + 3 && column >= blockStartColumn && column < blockStartColumn + 3
+}
+
+func isSolved(matriz: [[Int?]], board: [[Int?]], gameSolved: inout Bool) -> Void {
+    
+    if matriz == board {
+       
+        gameSolved = true
+    }
 }

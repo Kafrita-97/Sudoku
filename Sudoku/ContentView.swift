@@ -18,13 +18,14 @@ struct ContentView: View {
     @State var dificult = 0.5
     @State var defaultCellColor = Color.white
     @State var maxMistakes = false
+    @State var gameSolved = false
     
     var body: some View {
         VStack {
             
             Text ("New game")
                 .onTapGesture{
-                    resetParams(matriz: &matriz, board: &board, selectedRow: &selectedRow, selectedColumn: &selectedColumn, selectedFlag: &selectedFlag, mistakes: &mistakes, defaultCellColor: &defaultCellColor)
+                    resetParams(matriz: &matriz, board: &board, selectedRow: &selectedRow, selectedColumn: &selectedColumn, selectedFlag: &selectedFlag, mistakes: &mistakes, defaultCellColor: &defaultCellColor, gameSolved: &gameSolved)
                     newGame(matriz: &matriz, board: &board, dificult: dificult)
                 }
                 .font(.system(size: 30, weight: .semibold))
@@ -55,10 +56,13 @@ struct ContentView: View {
                         .border(Color.black)
                         .font(.system(size: 30, weight: .semibold))
                         .onTapGesture {
-                            validateInput(matriz: &matriz, board: &board, selectedColumn: selectedColumn, selectedRow: selectedRow, selectedFlag: selectedFlag, input: number.self, mistakes: &mistakes, maxMistakes: &maxMistakes)
+                            validateInput(matriz: &matriz, board: &board, selectedColumn: selectedColumn, selectedRow: selectedRow, selectedFlag: selectedFlag, input: number.self, mistakes: &mistakes, maxMistakes: &maxMistakes, gameSolved: &gameSolved)
                         }
                         .alert(isPresented: $maxMistakes, content: {
                             Alert(title: Text("Has perdido"))
+                        })
+                        .alert(isPresented: $gameSolved, content: {
+                            Alert(title: Text("Has ganado"))
                         })
                 }
             }
