@@ -4,31 +4,18 @@ Esta aplicación de Sudoku te permite disfrutar del juego sin anuncios intrusivo
 
 Características
 
-Sin anuncios: Disfruta del juego sin interrupciones.
-Interfaz simple: Fácil de usar y navegar.
-Funcionalidades básicas: Resuelve sudokus de diferentes niveles de dificultad.
-En desarrollo: Se añadirán nuevas funcionalidades a medida que el proyecto avance.
-Cómo usar
+  -Sin anuncios: Disfruta del juego sin interrupciones.
+  -Interfaz simple: Fácil de usar y navegar.
+  -Funcionalidades básicas: Resuelve sudokus de diferentes niveles de dificultad.
+  -En desarrollo: Se añadirán nuevas funcionalidades a medida que el proyecto avance.
 
-Descarga la aplicación.
-Abre la aplicación y selecciona un nivel de dificultad.
-Rellena la cuadrícula con números del 1 al 9.
-¡Comprueba si tu solución es correcta!
 Contribuciones
 
-Este proyecto es de código abierto, por lo que puedes contribuir a su desarrollo. Si quieres ayudar a mejorar la aplicación, puedes:
+  -Este proyecto es de código abierto, por lo que puedes contribuir a su desarrollo. Si quieres ayudar a mejorar la aplicación, puedes:
+  -Reportar errores: Si encuentras algún error, puedes reportarlo en la sección de issues de GitHub.
+  -Sugerir nuevas funcionalidades: Si tienes ideas para mejorar la aplicación, puedes sugerirlas en la sección de issues de GitHub.
+  -Enviar código: Puedes enviar código para mejorar la aplicación.
 
-Reportar errores: Si encuentras algún error, puedes reportarlo en la sección de issues de GitHub.
-Sugerir nuevas funcionalidades: Si tienes ideas para mejorar la aplicación, puedes sugerirlas en la sección de issues de GitHub.
-Enviar código: Puedes enviar código para mejorar la aplicación.
 Contacto
 
 Si tienes alguna pregunta o comentario, puedes contactar con el desarrollador a través de la sección de issues de GitHub.
-
-Agradecimientos
-
-El desarrollador agradece a todos los que han contribuido a este proyecto.
-
-Licencia
-
-Este proyecto está licenciado bajo la licencia MIT.
