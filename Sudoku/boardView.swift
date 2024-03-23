@@ -15,7 +15,6 @@ struct boardView: View {
     @Binding var selectedFlag: Bool
     @Binding var defaultCellColor: Color
     
-    
     var body: some View {
         
         VStack (spacing: -1) {
@@ -31,13 +30,58 @@ struct boardView: View {
                             .border (Color .black)
                             .font(.system(size: 25, weight: .semibold))
                             .onTapGesture {
-                                anyCellSelected(selectedFlag: &selectedFlag, selectedColumn: &selectedColumn, selectedRow: &selectedRow, newSelectedColumn: column.self, newSelectedRow: row.self)
+                                anyCellSelected(newSelectedRow: row.self, newSelectedColumn: column.self)
                             }
-                            .background(changeSelectedCellsColor(row: row.self, column: column.self, selectedFlag: selectedFlag, selectedRow: selectedRow, selectedColumn: selectedColumn, defaultCellColor: defaultCellColor))
-                            
+                            .background(changeSelectedCellsColor(row: row.self, column: column.self))
                     }
                 }
             }
-        }           
+        }
     }
+    
+    func anyCellSelected(newSelectedRow: Int, newSelectedColumn: Int) -> Void {
+        
+        if selectedFlag && selectedColumn == newSelectedColumn && selectedRow == newSelectedRow {
+            
+            selectedColumn = 0
+            selectedRow = 0
+            selectedFlag = false
+            
+        } else {
+            
+            selectedColumn = newSelectedColumn
+            selectedRow = newSelectedRow
+            selectedFlag = true
+        }
+    }
+    
+    func changeSelectedCellsColor(row: Int, column: Int) -> Color {
+        
+        if selectedFlag {
+            
+            if row == selectedRow || column == selectedColumn{
+                
+                return .gray
+                
+            } else if defineSelectedBlock(row: row, column: column) {
+                
+                return .gray
+                
+            } else {
+                
+                return defaultCellColor
+            }
+        }
+        
+        return defaultCellColor
+    }
+    
+    private func defineSelectedBlock(row: Int, column: Int) -> Bool {
+        
+        let blockStartRow = selectedRow / 3 * 3
+        let blockStartColumn = selectedColumn / 3 * 3
+        
+        return row >= blockStartRow && row < blockStartRow + 3 && column >= blockStartColumn && column < blockStartColumn + 3
+    }
+    
 }

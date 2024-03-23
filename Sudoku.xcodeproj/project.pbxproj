@@ -11,7 +11,6 @@
 		CD053D9A2B96BE6E00BFDA29 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD053D992B96BE6E00BFDA29 /* ContentView.swift */; };
 		CD053D9C2B96BE7000BFDA29 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD053D9B2B96BE7000BFDA29 /* Assets.xcassets */; };
 		CD053D9F2B96BE7000BFDA29 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD053D9E2B96BE7000BFDA29 /* Preview Assets.xcassets */; };
-		CD053DA82B96CA5400BFDA29 /* funcs.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD053DA72B96CA5400BFDA29 /* funcs.swift */; };
 		CD89B58D2B98B246009CBFB9 /* boardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD89B58C2B98B246009CBFB9 /* boardView.swift */; };
 /* End PBXBuildFile section */
 
@@ -21,7 +20,6 @@
 		CD053D992B96BE6E00BFDA29 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		CD053D9B2B96BE7000BFDA29 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CD053D9E2B96BE7000BFDA29 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		CD053DA72B96CA5400BFDA29 /* funcs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = funcs.swift; sourceTree = "<group>"; };
 		CD89B58C2B98B246009CBFB9 /* boardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = boardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -59,7 +57,6 @@
 				CD053D992B96BE6E00BFDA29 /* ContentView.swift */,
 				CD053D9B2B96BE7000BFDA29 /* Assets.xcassets */,
 				CD053D9D2B96BE7000BFDA29 /* Preview Content */,
-				CD053DA72B96CA5400BFDA29 /* funcs.swift */,
 				CD89B58C2B98B246009CBFB9 /* boardView.swift */,
 			);
 			path = Sudoku;
@@ -144,7 +141,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CD053D9A2B96BE6E00BFDA29 /* ContentView.swift in Sources */,
-				CD053DA82B96CA5400BFDA29 /* funcs.swift in Sources */,
 				CD89B58D2B98B246009CBFB9 /* boardView.swift in Sources */,
 				CD053D982B96BE6E00BFDA29 /* SudokuApp.swift in Sources */,
 			);
@@ -287,7 +283,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -323,7 +319,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
