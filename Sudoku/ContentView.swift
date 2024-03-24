@@ -29,26 +29,31 @@ struct ContentView: View {
             
             HStack {
                 
-                Text ("Nuevo juego")
-                    .onTapGesture{
+                VStack(alignment: .leading) {
+                    
+                    Button("Nuevo juego") {
                         newGame()
                     }
-                .font(.system(size: 30, weight: .semibold))
+                    .font(.system(size: 33, weight: .semibold))
+                    .foregroundColor(.black)
+                    .buttonStyle(.bordered)
+                        
+                    Spacer()
+                    
+                    HStack {
+                        Text ("Fallos: \(mistakes) / 3")
+                        Text("Tiempo: \(formatedCurrentTime())")
+                    }
+                    .frame(width: 250, alignment: .leading)
+                }
+                .frame(width: 250, height: 80)
                 
-                Spacer()
-                
-                Text("Dificultad: \(dificult, specifier: "%.1f")")
-            }
-            
-            HStack {
-                
-                Text("Tiempo: \(formatedCurrentTime())")
-                
-                Divider().fixedSize()
-                
-                Text ("Fallos: \(mistakes) / 3")
-                
-                Stepper("", value: $dificult, in: 0.1...0.9, step: 0.1)
+                VStack(alignment: .trailing) {
+                    Text("Dificultad: \(dificult, specifier: "%.1f")")
+                    Stepper("", value: $dificult, in: 0.1...0.9, step: 0.1)
+                    
+                }
+                .frame(height: 80, alignment: .centerLastTextBaseline)
             }
             
             Spacer()
@@ -62,7 +67,7 @@ struct ContentView: View {
                 ForEach (1..<10) { number in
                     
                     Text ("\(number)")
-                        .frame(width: 35, height: 55)
+                        .frame(width: 37, height: 55)
                         .border(Color.black)
                         .font(.system(size: 30, weight: .semibold))
                         .onTapGesture {
@@ -79,7 +84,6 @@ struct ContentView: View {
             }
             
             Spacer()
-            
         }
         .padding()
         .preferredColorScheme(.light)
