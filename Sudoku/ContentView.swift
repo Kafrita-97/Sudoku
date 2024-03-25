@@ -41,7 +41,9 @@ struct ContentView: View {
                     Spacer()
                     
                     HStack {
+                        
                         Text ("Fallos: \(mistakes) / 3")
+                        
                         Text("Tiempo: \(formatedCurrentTime())")
                     }
                     .frame(width: 250, alignment: .leading)
@@ -49,9 +51,10 @@ struct ContentView: View {
                 .frame(width: 250, height: 80)
                 
                 VStack(alignment: .trailing) {
-                    Text("Dificultad: \(dificult, specifier: "%.1f")")
-                    Stepper("", value: $dificult, in: 0.1...0.9, step: 0.1)
                     
+                    Text("Dificultad: \(dificult, specifier: "%.1f")")
+                    
+                    Stepper("", value: $dificult, in: 0.1...0.9, step: 0.1)
                 }
                 .frame(height: 80, alignment: .centerLastTextBaseline)
             }
