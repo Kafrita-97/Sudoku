@@ -9,59 +9,84 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State var solvedBoard = [[Int?]] (repeating: [Int?] (repeating: 0, count: 9),count: 9)
-    @State var board = [[Int?]] (repeating: [Int?] (repeating: 0, count: 9), count: 9)
+    @State var solvedBoard = [[String?]] (repeating: [String?] (repeating: " ", count: 9),count: 9)
+    @State var board = [[String?]] (repeating: [String?] (repeating: " ", count: 9), count: 9)
+    
     @State var selectedColumn = 0
     @State var selectedRow = 0
     @State var selectedFlag = false
+   
     @State var mistakes = 0
     @State var dificult = 0.5
-    @State var gameLosted = false
-    @State var gameSolved = false
-    @State var defaultCellColor = Color.white
+   
+    @State var gameAlertState: alertStatus?
+    @State var gameIsRunning = false
+    
     @State var timer: Timer?
     @State var startTime: Date?
     @State var currentGameTime: Int?
     
+    enum alertStatus: Identifiable {
+        
+        case lost
+        case win
+        
+        var id: Int {
+           
+            switch self {
+           
+            case .lost:
+                return 0
+           
+            case .win:
+                return 1
+            }
+        }
+    }
+
     var body: some View {
         
         VStack {
             
             HStack {
                 
-                VStack(alignment: .leading) {
+                
+                VStack() {
+                    
+                    Text("Tiempo: \(formatedCurrentTime())")
+                        .padding([.leading, .bottom], 6.0)
+                        .frame(width: 130.0, alignment: .leading)
+                    
+                    Divider()
+                        .padding(.leading, 6.0)
+                        .frame(width: 130.0)
+                    
+                    Text ("Fallos: \(mistakes) / 3")
+                        .padding([.top, .leading], 6.0)
+                        .frame(width: /*@START_MENU_TOKEN@*/130.0/*@END_MENU_TOKEN@*/, alignment: .leading)
+                }
+                .frame(width: 150, height: 80, alignment: .leading)
+                
+                VStack {
                     
                     Button("Nuevo juego") {
                         newGame()
                     }
+                    .padding(.trailing, 6.0)
                     .font(.system(size: 33, weight: .semibold))
                     .foregroundColor(.black)
                     .buttonStyle(.bordered)
-                        
-                    Spacer()
                     
-                    HStack {
-                        
-                        Text ("Fallos: \(mistakes) / 3")
-                        
-                        Text("Tiempo: \(formatedCurrentTime())")
-                    }
-                    .frame(width: 250, alignment: .leading)
+                    Stepper("Dificultad: \(dificult, specifier: "%.1f")", value: $dificult, in: 0.1...0.9, step: 0.1)
+                        .padding(.trailing, 6.0)
+                        .frame(width: 215)
                 }
-                .frame(width: 250, height: 80)
-                
-                VStack(alignment: .trailing) {
-                    
-                    Text("Dificultad: \(dificult, specifier: "%.1f")")
-                    
-                    Stepper("", value: $dificult, in: 0.1...0.9, step: 0.1)
-                }
-                .frame(height: 80, alignment: .centerLastTextBaseline)
+                .frame(width: 250, height: 80, alignment: .trailing)
             }
             
             Spacer()
             
-            boardView(board: $board, selectedColumn: $selectedColumn, selectedRow: $selectedRow, selectedFlag: $selectedFlag, defaultCellColor: $defaultCellColor)
+            boardView(board: $board, selectedColumn: $selectedColumn, selectedRow: $selectedRow, selectedFlag: $selectedFlag, gameIsRunning: $gameIsRunning)
             
             Spacer()
             
@@ -76,13 +101,14 @@ struct ContentView: View {
                         .onTapGesture {
                             validateInput(input: number.self)
                         }
-                        .alert(isPresented: $gameLosted, content: {
-                            Alert(title: Text("Has perdido"))
-                            
-                        })
-                        .alert(isPresented: $gameSolved, content: {
-                            Alert(title: Text("Has ganado"))
-                        })
+                        .alert(item: $gameAlertState) { state in
+                            switch state {
+                            case .lost:
+                                return Alert(title: Text("Has perdido"))
+                            case .win:
+                                return Alert(title: Text("Has ganado"))
+                            }
+                        }
                 }
             }
             
@@ -90,19 +116,6 @@ struct ContentView: View {
         }
         .padding()
         .preferredColorScheme(.light)
-    }
-    
-    private func resetParams() -> Void {
-        
-        solvedBoard = [[Int?]] (repeating: [Int?] (repeating: 0, count: 9),count: 9)
-        board = [[Int?]] (repeating: [Int?] (repeating: 0, count: 9), count: 9)
-        selectedColumn = 0
-        selectedRow = 0
-        selectedFlag = false
-        mistakes = 0
-        gameLosted = false
-        gameSolved = false
-        defaultCellColor = .white
     }
     
     func newGame() -> Void {
@@ -116,6 +129,19 @@ struct ContentView: View {
         hideCells()
         
         startTimer()
+        
+        gameIsRunning = true
+    }
+
+    private func resetParams() -> Void {
+        
+        solvedBoard = [[String?]] (repeating: [String?] (repeating: " ", count: 9),count: 9)
+        board = [[String?]] (repeating: [String?] (repeating: " ", count: 9), count: 9)
+        selectedColumn = 0
+        selectedRow = 0
+        selectedFlag = false
+        mistakes = 0
+        gameIsRunning = false
     }
     
     private func createSolvedBoard() -> Bool{
@@ -126,13 +152,13 @@ struct ContentView: View {
             
             for column in 0..<9 {
                 
-                if solvedBoard[row][column] == 0 {
+                if solvedBoard[row][column] == " " {
                     
                     for randomNum in numRamdomOrder {
                         
                         if validateNum(row: row, column: column, num: randomNum ) {
                             
-                            solvedBoard[row][column] = randomNum
+                            solvedBoard[row][column] = String(randomNum)
                             
                             if createSolvedBoard() {
                                 
@@ -140,16 +166,14 @@ struct ContentView: View {
                                 
                             } else {
                                 
-                                solvedBoard[row][column] = 0
+                                solvedBoard[row][column] = " "
                             }
                         }
                     }
-                    
                     return false
                 }
             }
         }
-        
         return true
     }
     
@@ -160,7 +184,7 @@ struct ContentView: View {
         
         for i in 0..<9 {
             
-            if solvedBoard[i][column] == num || solvedBoard[row][i] == num {
+            if solvedBoard[i][column] == String(num) || solvedBoard[row][i] == String(num) {
                 return false
             }
         }
@@ -169,7 +193,7 @@ struct ContentView: View {
             
             for j in 0..<3 {
                 
-                if solvedBoard[i + startRow][j + startCol] == num {
+                if solvedBoard[i + startRow][j + startCol] == String(num) {
                     return false
                 }
             }
@@ -188,13 +212,13 @@ struct ContentView: View {
             let randomRow = Int.random(in: 0...8)
             let randomColumn = Int.random(in: 0...8)
             
-            if board[randomRow][randomColumn] == 0 {
+            if board[randomRow][randomColumn] == " " {
                 
                 continue
                 
             } else {
                 
-                board[randomRow][randomColumn] = 0
+                board[randomRow][randomColumn] = " "
                 cellsHidden += 1
             }
         }
@@ -202,11 +226,13 @@ struct ContentView: View {
     
     func validateInput(input: Int) -> Void {
         
-        if selectedFlag && mistakes < 3 {
+        if selectedFlag && mistakes < 3 && gameIsRunning{
             
-            if solvedBoard [selectedRow][selectedColumn] == input {
+            if solvedBoard [selectedRow][selectedColumn] == String(input) {
                 
-                board [selectedRow][selectedColumn] = input
+                board [selectedRow][selectedColumn] = String(input)
+
+                isSolved()
                 
             } else {
                 
@@ -214,21 +240,21 @@ struct ContentView: View {
                 
                 if mistakes == 3 {
                     
-                    gameLosted = true
+                    gameIsRunning = false
+                    gameAlertState = .lost
                     
                     stopTimer()
                 }
             }
         }
-        
-        isSolved()
     }
     
     private func isSolved() -> Void {
         
         if solvedBoard == board {
             
-            gameSolved = true
+            gameAlertState = .win
+            gameIsRunning = false
             
             stopTimer()
         }
@@ -245,23 +271,23 @@ struct ContentView: View {
     }
     
     private func stopTimer() {
+        
         timer?.invalidate()
         timer = nil
     }
     
     func formatedCurrentTime() -> String {
-    
-    let totalSeconds = currentGameTime ?? 0
-    let minutes = totalSeconds / 60
-    let seconds = totalSeconds % 60
-    
-    let formattedTime = String(format: "%02d:%02d", minutes, seconds)
-    
-    return formattedTime
-}
+        
+        let totalSeconds = currentGameTime ?? 0
+        let minutes = totalSeconds / 60
+        let seconds = totalSeconds % 60
+        
+        let formattedTime = String(format: "%02d:%02d", minutes, seconds)
+        
+        return formattedTime
+    }
 }
 
 #Preview {
     ContentView()
 }
-

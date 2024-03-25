@@ -9,11 +9,16 @@ import SwiftUI
 
 struct boardView: View {
     
-    @Binding var board: [[Int?]]
+    @Binding var board: [[String?]]
+    
     @Binding var selectedColumn: Int
     @Binding var selectedRow: Int
     @Binding var selectedFlag: Bool
-    @Binding var defaultCellColor: Color
+    
+    @Binding var gameIsRunning: Bool
+    
+    let customColorLight = Color(red: 190/255, green: 190/255, blue: 190/255)
+    let customColorDark = Color(red: 130/255, green: 130/255, blue: 130/255)
     
     var body: some View {
         
@@ -25,14 +30,14 @@ struct boardView: View {
                     
                     ForEach (0..<9) { column in
                         
-                        Text (String(board [row][column] ?? 0))
+                        Text (board [row][column] ?? " ")
+                            .font(.system(size: 25, weight: .semibold))
                             .frame(width: 45, height: 50)
                             .border (Color .black)
-                            .font(.system(size: 25, weight: .semibold))
+                            .background(changeSelectedCellsColor(row: row.self, column: column.self))
                             .onTapGesture {
                                 anyCellSelected(newSelectedRow: row.self, newSelectedColumn: column.self)
                             }
-                            .background(changeSelectedCellsColor(row: row.self, column: column.self))
                     }
                 }
             }
@@ -57,23 +62,26 @@ struct boardView: View {
     
     func changeSelectedCellsColor(row: Int, column: Int) -> Color {
         
-        if selectedFlag {
+        if selectedFlag && gameIsRunning {
             
-            if row == selectedRow || column == selectedColumn{
+            if row == selectedRow && column == selectedColumn {
                 
-                return .gray
+                return customColorDark
                 
+            } else if row == selectedRow || column == selectedColumn {
+                
+                return customColorLight
+            
             } else if defineSelectedBlock(row: row, column: column) {
                 
-                return .gray
+                return customColorLight
                 
             } else {
                 
-                return defaultCellColor
+                return .white
             }
         }
-        
-        return defaultCellColor
+        return .white
     }
     
     private func defineSelectedBlock(row: Int, column: Int) -> Bool {
@@ -83,5 +91,5 @@ struct boardView: View {
         
         return row >= blockStartRow && row < blockStartRow + 3 && column >= blockStartColumn && column < blockStartColumn + 3
     }
-    
+
 }
