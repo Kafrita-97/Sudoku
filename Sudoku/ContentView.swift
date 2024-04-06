@@ -9,16 +9,35 @@ import SwiftUI
 
 struct ContentView: View {
     
+    //    let screenWidth = UIScreen.main.bounds.width
+    
+    //    let columns = [
+    //        GridItem(),
+    //        GridItem(),
+    //        GridItem(),
+    //        GridItem(),
+    //        GridItem(),
+    //        GridItem(),
+    //        GridItem(),
+    //        GridItem(),
+    //        GridItem()
+    //    ]
+    
     @State var solvedBoard = [[String?]] (repeating: [String?] (repeating: " ", count: 9),count: 9)
     @State var board = [[String?]] (repeating: [String?] (repeating: " ", count: 9), count: 9)
+    
+    //
+    //    @State var uniArraySolvedBoard = [String?] (repeating: " ", count: 81)
+    //    @State var uniArrayBoard = [String?] (repeating: " ", count: 81)
+    //
     
     @State var selectedColumn = 0
     @State var selectedRow = 0
     @State var selectedFlag = false
-   
+    
     @State var mistakes = 0
-    @State var dificult = 0.5
-   
+    @State var dificult: dificultLevel?
+    
     @State var gameAlertState: alertStatus?
     @State var gameIsRunning = false
     
@@ -32,59 +51,101 @@ struct ContentView: View {
         case win
         
         var id: Int {
-           
+            
             switch self {
-           
+                
             case .lost:
                 return 0
-           
+                
             case .win:
                 return 1
             }
         }
     }
-
+    
+    enum dificultLevel {
+        
+        case facil
+        case normal
+        case dificil
+        
+        var id: Double {
+            
+            switch self {
+                
+            case .facil:
+                return 0.3
+                
+            case .normal:
+                return 0.5
+                
+            case .dificil:
+                return 0.7
+            }
+        }
+    }
+    
     var body: some View {
         
         VStack {
             
             HStack {
                 
-                
-                VStack() {
-                    
-                    Text("Tiempo: \(formatedCurrentTime())")
-                        .padding([.leading, .bottom], 6.0)
-                        .frame(width: 130.0, alignment: .leading)
-                    
-                    Divider()
-                        .padding(.leading, 6.0)
-                        .frame(width: 130.0)
-                    
-                    Text ("Fallos: \(mistakes) / 3")
-                        .padding([.top, .leading], 6.0)
-                        .frame(width: /*@START_MENU_TOKEN@*/130.0/*@END_MENU_TOKEN@*/, alignment: .leading)
-                }
-                .frame(width: 150, height: 80, alignment: .leading)
-                
                 VStack {
                     
                     Button("Nuevo juego") {
                         newGame()
                     }
-                    .padding(.trailing, 6.0)
-                    .font(.system(size: 33, weight: .semibold))
+                    .font(.system(size: 31, weight: .semibold))
                     .foregroundColor(.black)
                     .buttonStyle(.bordered)
                     
-                    Stepper("Dificultad: \(dificult, specifier: "%.1f")", value: $dificult, in: 0.1...0.9, step: 0.1)
-                        .padding(.trailing, 6.0)
-                        .frame(width: 215)
+                    Menu("Dificultad: \(dificult ?? .normal)") {
+                        
+                        Button("Facil") {dificult = .facil}
+                        Button("Normal") {dificult = .normal}
+                        Button("Dificil") {dificult = .dificil}
+                    }
+                    .font(.system(size: 25, weight: .light))
+                    .foregroundColor(.black)
+                    .padding(.top, 8)
                 }
-                .frame(width: 250, height: 80, alignment: .trailing)
+                .frame(width: 250, height: 80, alignment: .leading)
+                
+                VStack() {
+                    
+                    GroupBox() {
+                        
+                        Text("Tiempo: \(formatedCurrentTime())")
+                            .padding(.bottom, 6.0)
+                            .frame(width: 130, alignment: .center)
+                        
+                        Divider()
+                            .frame(width: 130.0)
+                        
+                        Text ("Fallos: \(mistakes) / 3")
+                            .padding(.top, 6.0)
+                            .frame(width: 130.0, alignment: .center)
+                    }
+                    .frame(width: 130, height: 80, alignment: .trailing)
+                }
             }
             
             Spacer()
+            
+            //            ya tengo el grid ok, solo queda reimplementar toda la logica
+            //            LazyVGrid(columns: columns, spacing: -1) {
+            //
+            //                ForEach (0..<81) { i in
+            //                    Text("\(uniArrayBoard[i] ?? " ")")
+            //                        .onTapGesture {
+            //                            print(i.self)
+            //                        }
+            //                }
+            //                .frame(width:screenWidth/9, height: screenWidth/9)
+            //                .border(Color.black)
+            //
+            //            }
             
             boardView(board: $board, selectedColumn: $selectedColumn, selectedRow: $selectedRow, selectedFlag: $selectedFlag, gameIsRunning: $gameIsRunning)
             
@@ -94,21 +155,14 @@ struct ContentView: View {
                 
                 ForEach (1..<10) { number in
                     
-                    Text ("\(number)")
-                        .frame(width: 37, height: 55)
-                        .border(Color.black)
-                        .font(.system(size: 30, weight: .semibold))
-                        .onTapGesture {
-                            validateInput(input: number.self)
-                        }
-                        .alert(item: $gameAlertState) { state in
-                            switch state {
-                            case .lost:
-                                return Alert(title: Text("Has perdido"))
-                            case .win:
-                                return Alert(title: Text("Has ganado"))
-                            }
-                        }
+                    Button("\(number)") {
+                        validateInput(input: number.self)
+                    }
+                    .font(.system(size: 30))
+                    .foregroundColor(.black)
+                    .frame(width: 37, height:60)
+                    .background(Color(red: 233/255, green: 233/255, blue: 235/255))
+                    .cornerRadius(7)
                 }
             }
             
@@ -116,7 +170,30 @@ struct ContentView: View {
         }
         .padding()
         .preferredColorScheme(.light)
+        .alert(item: $gameAlertState) { state in
+            switch state {
+            case .lost:
+                return Alert(title: Text("Has perdido"))
+            case .win:
+                return Alert(title: Text("Has ganado"))
+            }
+        }
     }
+    
+    //provisonal para pasar el array 2d a 1d hasta rediseñar la logica
+    //    func biArrayToUniArray(biArray: [[String?]], uniArray: inout [String?]) {
+    //
+    //        var index = 0
+    //        for fila in biArray {
+    //            for elemento in fila {
+    //                uniArray.insert(elemento ?? " ", at: index)
+    //                index += 1
+    //            }
+    //        }
+    //        print(uniArray)
+    //        print(uniArray.count)
+    //    }
+    //
     
     func newGame() -> Void {
         
@@ -128,11 +205,13 @@ struct ContentView: View {
         
         hideCells()
         
+        //        biArrayToUniArray(biArray: board, uniArray: &uniArrayBoard)
+        
         startTimer()
         
         gameIsRunning = true
     }
-
+    
     private func resetParams() -> Void {
         
         solvedBoard = [[String?]] (repeating: [String?] (repeating: " ", count: 9),count: 9)
@@ -142,6 +221,8 @@ struct ContentView: View {
         selectedFlag = false
         mistakes = 0
         gameIsRunning = false
+        //        uniArraySolvedBoard = [String] ()
+        //        uniArrayBoard = [String] ()
     }
     
     private func createSolvedBoard() -> Bool{
@@ -207,7 +288,7 @@ struct ContentView: View {
         var cellsHidden = 0.0
         board = solvedBoard
         
-        while cellsHidden < (totalCells * dificult - 1) {
+        while cellsHidden < (totalCells * (dificult?.id ?? 0.5) - 1) {
             
             let randomRow = Int.random(in: 0...8)
             let randomColumn = Int.random(in: 0...8)
@@ -231,7 +312,7 @@ struct ContentView: View {
             if solvedBoard [selectedRow][selectedColumn] == String(input) {
                 
                 board [selectedRow][selectedColumn] = String(input)
-
+                
                 isSolved()
                 
             } else {
